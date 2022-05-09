@@ -1,5 +1,6 @@
 from cProfile import label
 from datetime import datetime
+from pickle import GLOBAL
 import tkinter
 import tkinter.messagebox as msgbox
 from tkinter import *
@@ -67,6 +68,19 @@ def out():
     getImage()
     app.destroy()
 
+## 남자 선택시 호출되는 메서드
+
+def change2man():
+    global isMan
+    isMan=TRUE
+    aa.insert(1.0,"남")
+    aa.delete(1.0,"여")
+def change2woman():
+    global isWoman
+    isWoman=TRUE
+    aa.insert(1.0,"여")
+    aa.delete(1.0,"남")
+
 ############################################## 시작점
 # 선택창 시작
 app=Tk()
@@ -77,10 +91,24 @@ app.geometry('540x640')
 
 app.resizable(0,0)
 
-buttonExample=tkinter.Button(app,background="white",text="create new window",width=10,height=10,
+startButton=tkinter.Button(app,background="white",text="실행버튼",width=30,height=3,
 command=out)
 
-buttonExample.place(x=150,y=150)
+startButton.place(x=160,y=550)
+
+# 남/녀, 옷입력, 추위/더위
+man=tkinter.Button(app,background="white",text="남",width=30,height=3,command=change2man)
+woman=tkinter.Button(app,background="white",text="여",width=30,height=3,command=change2woman)
+isMan=FALSE
+isWoman=FALSE
+aa=tkinter.Text(app,height=2)
+
+
+
+aa.place(x=0,y=0)
+
+man.place(x=100,y=100)
+woman.place(x=300,y=100)
 
 
 
