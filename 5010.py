@@ -1,11 +1,12 @@
-
+from msilib.schema import ComboBox
 import sqlite3
-from datetime import datetime
+from datetime import date, datetime
 from pickle import GLOBAL
 import tkinter
 import tkinter.messagebox as msgbox
 from tkinter import *
 from datetime import datetime
+from typing import Type
 from click import option
 from numpy import imag
 from selenium import webdriver
@@ -84,13 +85,18 @@ def change2woman():
 
 # 옷을 추가하는 메서드
 def adding(c):
+    # 테스트 변수
     name="asdg"
-    # 데이터 삽입 방법 1
-    num=4
+    # 쿼리문 날려서 cursor에 결과 담기
+    c.execute("SELECT COUNT(id) FROM 'clothes'")
+   
+    num=c.fetchone()[0]+1
     c.execute("INSERT INTO clothes VALUES"+'('+str(num)+',\''+name+"\',\'"+name+"\');")
-# 옷 추가하기 선택버튼 
+
+# "옷 추가하기" 선택버튼 
 def addClothes():
     # 창 환경설정
+    
     newWindow=Toplevel(app)
     newWindow.title("옷 추가하기")
     newWindow.geometry('540x640')
@@ -105,15 +111,15 @@ def addClothes():
     c.execute("CREATE TABLE IF NOT EXISTS clothes \
         (id integer PRIMARY KEY,name text,color text)")
 
-    # 옷 선택 리스트 박스
-    
-
-    
-    ## 추가하는 버튼
+    ## 버튼
     addingButton=tkinter.Button(newWindow,background="white",text="추가하기",width=30,height=3,
-    command=adding(c))
+    command=lambda: adding(c))
     
     addingButton.place(x=160,y=550)
+    ## 콤보 박스
+    
+
+
 
 
 ############################################## 시작점
@@ -134,8 +140,6 @@ startButton.place(x=160,y=550)
 # 남/녀, 옷입력, 추위/더위
 man=tkinter.Button(app,background="white",text="남",width=30,height=3,command=change2man)
 woman=tkinter.Button(app,background="white",text="여",width=30,height=3,command=change2woman)
-isMan=FALSE
-isWoman=FALSE
 
 selectClothes=tkinter.Button(app,background="white",text="옷추가하기",width=60,height=3,command=addClothes)
 
