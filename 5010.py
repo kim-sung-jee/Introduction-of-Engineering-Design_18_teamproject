@@ -1,4 +1,6 @@
+
 from msilib.schema import ComboBox
+from tkinter import ttk
 import sqlite3
 from datetime import date, datetime
 from pickle import GLOBAL
@@ -84,14 +86,18 @@ def change2woman():
     isWoman=TRUE
 
 # 옷을 추가하는 메서드
-def adding(c):
+def adding(c,combo,combo2):
     # 테스트 변수
-    name="asdg"
+    name=combo.get()
+    name2=combo2.get()
     # 쿼리문 날려서 cursor에 결과 담기
     c.execute("SELECT COUNT(id) FROM 'clothes'")
-   
+    ## 전체 행 개수 조회
     num=c.fetchone()[0]+1
-    c.execute("INSERT INTO clothes VALUES"+'('+str(num)+',\''+name+"\',\'"+name+"\');")
+    ## 쿼리문 날려서 저장하기
+    c.execute("INSERT INTO clothes VALUES"+'('+str(num)+',\''+name+"\',\'"+name2+"\');")
+    
+
 
 # "옷 추가하기" 선택버튼 
 def addClothes():
@@ -113,12 +119,23 @@ def addClothes():
 
     ## 버튼
     addingButton=tkinter.Button(newWindow,background="white",text="추가하기",width=30,height=3,
-    command=lambda: adding(c))
+    command=lambda: adding(c,comboExample,comboExample2))
     
     addingButton.place(x=160,y=550)
-    ## 콤보 박스
-    
 
+    ## 콤보박스1
+    list=["asdf","Adsg","awe"]
+    comboExample=ttk.Combobox(newWindow,values=list,height=10)
+    
+    comboExample.place(x=100,y=100)
+    comboExample.current(0)
+
+    ## 콤보박스2
+    list2=["asdga","asrhas","Asd"]
+    comboExample2=ttk.Combobox(newWindow,values=list2,height=10)
+
+    comboExample2.place(x=100,y=300)
+    comboExample2.current(0)
 
 
 
