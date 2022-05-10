@@ -68,14 +68,38 @@ def getImage():
     img_resize=img.resize((int(img.width/2),int(img.height/2)))
     img_resize.save("save1.png")
 
-## 선택창 버튼 클릭시 호출되는 메서드
+def algorithm(clothesList,clothesColorList):
+    for i in clothesList:
+        print(i)
+
+
+## 선택창 맨밑 실행버튼 클릭시 호출되는 메서드
 def out():
+    ## sqllite3 디비에 커넥트하기
+    conn = sqlite3.connect("weatherWear.db",isolation_level=None)
+    
+    # 커서 획득
+    c=conn.cursor()
+
+    # 쿼리문 날리기 테이블 없으면 생성함
+    c.execute("CREATE TABLE IF NOT EXISTS clothes \
+        (id integer PRIMARY KEY,name text,color text)")
+    global clothesList # 옷종류
+    clothesList = []
+    global clothesColorList # 옷 색깔
+    clothesColorList=[]
+    c.execute("SELECT name,color FROM clothes ")
+    Cob=c.fetchall()
+    for i in Cob:
+        clothesList.append(i[0])
+
+    algorithm(clothesList,clothesColorList)
+
+
     getImage()
     app.destroy()
 
 ## 남자 선택시 호출되는 메서드
-
-
 def change2man():
     global isMan
     isMan=TRUE
@@ -124,14 +148,14 @@ def addClothes():
     addingButton.place(x=160,y=550)
 
     ## 콤보박스1
-    list=["asdf","Adsg","awe"]
+    list=["asdf","Adsg","awe"] #여기에 옷종류
     comboExample=ttk.Combobox(newWindow,values=list,height=10)
     
     comboExample.place(x=100,y=100)
     comboExample.current(0)
 
     ## 콤보박스2
-    list2=["asdga","asrhas","Asd"]
+    list2=["asdga","asrhas","Asd"]#여기에 옷 색깔
     comboExample2=ttk.Combobox(newWindow,values=list2,height=10)
 
     comboExample2.place(x=100,y=300)
@@ -159,8 +183,6 @@ man=tkinter.Button(app,background="white",text="남",width=30,height=3,command=c
 woman=tkinter.Button(app,background="white",text="여",width=30,height=3,command=change2woman)
 
 selectClothes=tkinter.Button(app,background="white",text="옷추가하기",width=60,height=3,command=addClothes)
-
-
 
 man.place(x=50,y=100)
 woman.place(x=300,y=100)
