@@ -10,7 +10,7 @@ from datetime import datetime
 from selenium import webdriver
 import time
 from PIL import Image
-from soupsieve import select
+
 
 
 
