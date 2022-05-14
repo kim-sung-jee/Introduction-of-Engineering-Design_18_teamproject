@@ -1,4 +1,5 @@
 
+from asyncio.windows_events import NULL
 from tkinter import ttk
 import sqlite3
 from datetime import date, datetime
@@ -6,9 +7,6 @@ import tkinter
 import tkinter.messagebox as msgbox
 from tkinter import *
 from datetime import datetime
-from typing import Type
-from click import option
-from numpy import imag
 from selenium import webdriver
 import time
 from PIL import Image
@@ -127,11 +125,22 @@ def adding(c,combo,combo2):
     name2=combo2.get()
     # 쿼리문 날려서 cursor에 결과 담기
     c.execute("SELECT id FROM 'clothes' ORDER BY id DESC LIMIT 1")
+    # 옷장속에 아무옷도 없으면 그냥 넣기
+   
+
     ## 전체 행 개수 조회
-    num=c.fetchall()[0][0]
-    num+=1
-    ## 쿼리문 날려서 저장하기
-    c.execute("INSERT INTO clothes VALUES"+'('+str(num)+',\''+name+"\',\'"+name2+"\');")
+    num=c.fetchall()
+    if(num==[]):
+        # 비엇으면 그냥 넣기
+        c.execute("INSERT INTO clothes VALUES"+'('+str(1)+',\''+name+"\',\'"+name2+"\');")
+    else:
+        # 안비엇으면 id 계산해서 넣기
+        num2=num[0][0]
+        num2+=1
+        c.execute("INSERT INTO clothes VALUES"+'('+str(num2)+',\''+name+"\',\'"+name2+"\');")
+
+   
+    
     
 # 옷 삭제하는 메서드
 def deleteOne():
