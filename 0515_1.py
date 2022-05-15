@@ -6,6 +6,7 @@ import tkinter
 import tkinter.messagebox as msgbox
 from tkinter import *
 from datetime import datetime
+from turtle import back
 from selenium import webdriver
 import time
 from PIL import Image
@@ -229,10 +230,32 @@ def addClothes(background):
     comboExample2.place(x=100,y=300)
     comboExample2.current(0)
 
-def userconfig():
-    print()
+def userconfig(background):
+    newWindow=Toplevel(app)
+    newWindow.title("옷 추가하기")
+    newWindow.geometry('540x640')
+    newWindow.resizable(0,0)
 
 
+    b_label2=tkinter.Label(newWindow,image=background)
+    b_label2.place(x=0,y=0)
+
+    man=tkinter.Button(newWindow,background="white",text="남",width=15,height=3)
+    woman=tkinter.Button(newWindow,background="white",text="여",width=15,height=3)
+    man.place(x=100,y=100)
+    woman.place(x=330, y=100)
+
+    cnf1=tkinter.Button(newWindow,background="white",text="추위를 많이탐",width=48,height=3)
+    cnf2=tkinter.Button(newWindow,background="white",text="더위를 많이탐",width=48,height=3)
+    cnf3=tkinter.Button(newWindow,background="white",text="추위와 더위 많이탐",width=48,height=3)
+
+    cnf1.place(x=100,y=200)
+    cnf2.place(x=100,y=300)
+    cnf3.place(x=100,y=400)
+
+    check=tkinter.Button(newWindow,background="white",text="설정완료!",width=15,height=3)
+
+    check.place(x=220,y=500)
 
 ## 버튼,기본배경이미지,
 ## 앱의 시작점##
@@ -252,6 +275,12 @@ b_label=tkinter.Label(app,image=background)
 b_label.place(x=0,y=0)
 #######
 
+## 버튼 이미지 ##
+brown=PhotoImage(file="brown.png")
+
+
+##
+
 
 startButton=tkinter.Button(app,background="white",text="옷추천받기",width=30,height=3,
 command=out)
@@ -260,15 +289,15 @@ startButton.place(x=160,y=550)
 
 # 남/녀, 옷입력, 추위/더위
 
-userConfig=tkinter.Button(app,background="white",text="사용자설정",width=60,height=3,
-command=userconfig)
+userConfig=tkinter.Button(app,background="#F08080",text="사용자설정",width=60,height=3,
+command=lambda:userconfig(background))
 
 
-selectClothes=tkinter.Button(app,background="white",text="옷추가하기",width=60,height=3,
+selectClothes=tkinter.Button(app,background="#BCBFBF",text="옷추가하기",width=60,height=3,
 command=lambda:addClothes(background))
 
 # 옷장 정리하기
-clear=tkinter.Button(app,background="white",text="옷장정리하기",width=60,height=3,
+clear=tkinter.Button(app,background="#DCDCDC",text="옷장정리하기",width=60,height=3,
 command=lambda:deleteOne(background))
 
 userConfig.place(x=50,y=100)
