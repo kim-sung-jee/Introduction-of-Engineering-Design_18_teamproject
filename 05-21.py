@@ -1,3 +1,4 @@
+from distutils.command.config import config
 import recalgorithm
 from tkinter import ttk
 import sqlite3
@@ -15,14 +16,14 @@ from PIL import Image
 
 
 
-def getImage():
+def getImage(weatherData):
     # init
     options=webdriver.ChromeOptions()
     options.add_argument('headless')
     options.add_argument('window-size=1920x1080')
 
     # 날씨 정보
-    weather_data=[]
+    
     # 지역 정보
     driver = webdriver.Chrome(options=options)
 
@@ -42,6 +43,7 @@ def getImage():
 
     print(sensible)
 
+    
 
     # 스크린샷 하기
     driver.maximize_window()
@@ -66,48 +68,44 @@ def getImage():
     img_resize=img.resize((int(img.width/2),int(img.height/2)))
     img_resize.save("save1.png")
 
-# def recalgorithm(clothesList,clothesColorList):
-#     print("SAdg")
-#     # for i in clothesList:
-#     #     print(i)
-    
-#     # for i in clothesColorList:
-#     #     print(i)
-
 
 ## 선택창 맨밑 실행버튼 클릭시 호출되는 메서드
-def out():
+def out(configList):
     ## sqllite3 디비에 커넥트하기
     conn = sqlite3.connect("weatherWear.db",isolation_level=None)
     
     # 커서 획득
     c=conn.cursor()
 
+    
+
     # 쿼리문 날리기 테이블 없으면 생성함
-    c.execute("CREATE TABLE IF NOT EXISTS clothes \
-        (id integer PRIMARY KEY,name text,color text)")
-
-    global clothesList # 옷종류
-    clothesList = []
-    global clothesColorList # 옷 색깔
-    clothesColorList=[]
     c.execute("SELECT name,color FROM clothes")
-    Cob=c.fetchall()
-    #cob=[['종류','색깔']<<1번째,["종류2","색깔2"]<<2번째,[]<<3번째,[],[]...]
+
+    Cob = c.fetchall()
+    topList=[]
+    bottomList=[]
+    outerList=[]
+    list=["긴팔 티셔츠","긴팔 셔츠","체크 셔츠","반팔 셔츠","반팔 티셔츠","카라 셔츠","민소매 티셔츠","니트","후드","터틀넥 스웨터"]
+    list3=["청바지","바지","반바지","얇은 치마","치마"]
+    
     for i in Cob:
-        clothesList.append(i[0])
+        if i[0] in list:
+            topList.append([i[0],i[1]])
+        elif i[0] in list3:
+            bottomList.append([i[0],i[1]])
+        else:
+            outerList.append([i[0],i[1]])
+    
 
-    for i in Cob:
-        clothesColorList.append(i[1])
-
-
-    ## 이부분을 짜야함 
-    recalgorithm.algo("Asdg","SAdg")
-    ####
-
+    
+    #### 날씨 정보
+    weatherData=[]
 
     # 크롤링한다 
-    getImage()
+    getImage(weatherData)
+
+    recalgorithm.algo(configList[0],configList[1],topList,bottomList,outerList)
     # app 꺼짐
     app.destroy()
 
@@ -376,13 +374,23 @@ def addClothes(background):
     dkdnxjcolor.current(0)
 
    
+def userConfig1(configList):
+    configList[0]=0
+def userConfig2(configList):
+    configList[0]=1
+def userConfig3(configList):
+    configList[1]=0
+def userConfig4(configList):
+    configList[1]=1
+def userConfig5(configList):
+    configList[1]=2
+
+def exitcommand(newWindow):
+    newWindow.destroy()
 
 
 
-
-
-
-def userconfig(background):
+def userconfig(background,configList):
     newWindow=Toplevel(app)
     newWindow.title("옷 추가하기")
     newWindow.geometry('540x640')
@@ -392,20 +400,20 @@ def userconfig(background):
     b_label2=tkinter.Label(newWindow,image=background)
     b_label2.place(x=0,y=0)
 
-    man=tkinter.Button(newWindow,background="white",text="남",width=15,height=3)
-    woman=tkinter.Button(newWindow,background="white",text="여",width=15,height=3)
+    man=tkinter.Button(newWindow,background="white",text="남",width=15,height=3,command=lambda:userConfig1(configList))
+    woman=tkinter.Button(newWindow,background="white",text="여",width=15,height=3,command=lambda:userConfig2(configList))
     man.place(x=100,y=100)
     woman.place(x=330, y=100)
 
-    cnf1=tkinter.Button(newWindow,background="white",text="추위를 많이탐",width=48,height=3)
-    cnf2=tkinter.Button(newWindow,background="white",text="더위를 많이탐",width=48,height=3)
-    cnf3=tkinter.Button(newWindow,background="white",text="추위와 더위 많이탐",width=48,height=3)
+    cnf1=tkinter.Button(newWindow,background="white",text="추위를 많이탐",width=48,height=3,command=lambda:userConfig3(configList))
+    cnf2=tkinter.Button(newWindow,background="white",text="더위를 많이탐",width=48,height=3,command=lambda:userConfig4(configList))
+    cnf3=tkinter.Button(newWindow,background="white",text="추위와 더위 많이탐",width=48,height=3,command=lambda:userConfig5(configList))
 
     cnf1.place(x=100,y=200)
     cnf2.place(x=100,y=300)
     cnf3.place(x=100,y=400)
 
-    check=tkinter.Button(newWindow,background="white",text="설정완료!",width=15,height=3)
+    check=tkinter.Button(newWindow,background="white",text="설정완료!",width=15,height=3,command=lambda:exitcommand(newWindow))
 
     check.place(x=220,y=500)
 
@@ -427,6 +435,11 @@ b_label=tkinter.Label(app,image=background)
 b_label.place(x=0,y=0)
 #######
 
+## 0은 남여 , 1은 추위관련 flag
+configList=[]
+configList.append(0)
+configList.append(0)
+
 ## 버튼 이미지 ##
 brown=PhotoImage(file="brown.png")
 
@@ -435,14 +448,14 @@ brown=PhotoImage(file="brown.png")
 
 
 startButton=tkinter.Button(app,background="white",text="옷추천받기",width=30,height=3,
-command=out)
+command=lambda:out(configList))
 
 startButton.place(x=160,y=550)
 
 # 남/녀, 옷입력, 추위/더위
 
 userConfig=tkinter.Button(app,background="#F08080",text="사용자설정",width=60,height=3,
-command=lambda:userconfig(background))
+command=lambda:userconfig(background,configList))
 
 
 selectClothes=tkinter.Button(app,background="#BCBFBF",text="옷추가하기",width=60,height=3,
