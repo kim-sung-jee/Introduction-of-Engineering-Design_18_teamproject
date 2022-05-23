@@ -30,7 +30,7 @@ def getImage(weatherData):
     #
     # c
     #
-    driver.get("https://search.naver.com/search.naver?query=%EB%82%A0%EC%94%A8&ie=utf8&sm=whl_nht")
+    driver.get("https://search.naver.com/search.naver?sm=tab_hty.top&where=nexearch&query=%EB%84%A4%EC%9D%B4%EB%B2%84+%EB%82%A0%EC%94%A8&oquery=%EA%B8%B0%EC%83%81%EC%B2%AD&tqi=hElw2lp0JywssaJrew0ssssssZN-337365")
 
     # 뜰때 까지 기다림
     time.sleep(3)
